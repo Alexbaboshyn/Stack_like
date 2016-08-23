@@ -15,7 +15,7 @@ class Api::CategoriesController < ApplicationController
   end
 
   def collection
-    @categories = Category.page(params[:page]).per(15)
+    @categories = Category.page(params[:page]).per(5)
   end
 
   def resource_params

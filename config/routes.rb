@@ -8,17 +8,17 @@ Rails.application.routes.draw do
 
   namespace :api do
 
-    resources :users
+    resources :users, only: [:create, :destroy, :index, :update]
 
     resource :session, only: [:create, :destroy]
 
-    resources :categories do
-      resources :posts
+    resources :categories, only: [:index, :show, :create, :update, :destroy] do
+      resources :posts, only: [:index, :create]
     end
 
     resource :me, controller: 'users', only: [:show]
 
-    resources :posts do
+    resources :posts, only: [:index, :show] do
       resource :likes, only: [:create, :destroy]
       resources :comments
     end
