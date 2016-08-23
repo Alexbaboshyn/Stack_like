@@ -16,15 +16,15 @@ Rails.application.routes.draw do
       resources :posts
     end
 
-    resource :me, only: [:show]
+    resource :me, controller: 'users', only: [:show]
 
     resources :posts do
+      resource :likes, only: [:create, :destroy]
       resources :comments
-      resources :likes
     end
 
     resources :comments do
-      resources :likes
+      resource :likes, only: [:create, :destroy]
     end
 
   end

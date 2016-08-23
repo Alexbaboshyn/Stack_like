@@ -13,6 +13,6 @@ RSpec.describe Like, type: :model do
     with([:positive, :negative])
   end
 
-  # it { should validate_uniqueness_of(:user_id).scoped_to(:likeable_kind) }
+  # it { should validate_uniqueness_of(:user_id).scoped_to(:likeable_id, :likeable_kind) }
 
 end

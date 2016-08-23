@@ -1,6 +1,4 @@
-class Post < ApplicationRecord
-
-  attr_accessor :author_id, :category_id, :title, :description
+class Post < ActiveRecord::Base
 
   validates :title, presence: true
 
@@ -15,5 +13,5 @@ class Post < ApplicationRecord
   has_many :likes, as: :likeable, dependent: :destroy
 
   has_many :comments, dependent: :destroy
-  
+
 end

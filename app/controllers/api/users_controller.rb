@@ -3,7 +3,6 @@ skip_before_action :authenticate, only: [:create]
 
   def create
     super
-    head :unprocessable_entity unless resource.valid?
     head :created
   end
 
@@ -13,7 +12,7 @@ skip_before_action :authenticate, only: [:create]
   end
 
   def resource
-    @user
+    @user ||=current_user
   end
 
   def collection

@@ -1,8 +1,15 @@
 class Api::PostsController < ApplicationController
 
+
+
   private
+
+  def parent
+    @parent ||= Category.find(params[:category_id])
+  end
+
   def build_resource
-    @post = current_user.posts.new resource_params
+    @post = parent.posts.build(resource_params.merge(author: current_user))
   end
 
   def resource
@@ -14,6 +21,6 @@ class Api::PostsController < ApplicationController
   end
 
   def resource_params
-    params.permit(:title, :description, :category_id)
+    params.require(:post).permit(:title, :description)
   end
 end

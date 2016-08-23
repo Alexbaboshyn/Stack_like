@@ -6,8 +6,13 @@ class Api::CommentsController < ApplicationController
   end
 
   private
+
+  def parent
+    @parent ||= Post.find(params[:post_id])
+  end
+
   def build_resource
-    @comment = current_user.comments.new resource_params
+    @comment = parent.comments.build(resource_params.merge(user: current_user))
   end
 
   def resource
@@ -15,10 +20,10 @@ class Api::CommentsController < ApplicationController
   end
 
   def collection
-    @comments = Comment.page(params[:page]).per(15)
+    @comments = Comment.page(params[:page]).per(5)
   end
 
   def resource_params
-    params.permit(:text, :post_id)
+    params.require(:comment).permit(:text)
   end
 end

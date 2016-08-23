@@ -4,7 +4,7 @@ class CommentDecorator < Draper::Decorator
   def as_json *args
     {
       id: id,
-      author: User.where(id: user_id).decorate,
+      author: user.decorate,
       text: text,
       rating: rating
     }
