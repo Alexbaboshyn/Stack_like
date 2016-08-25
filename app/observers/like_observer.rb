@@ -1,8 +1,9 @@
 class LikeObserver < ActiveRecord::Observer
 
   def after_save(like)
-    Comment.find(params[:comment_id]).increment(:rating, 1)
-
+    likeable.increment(:rating, 1)
+    likeable.save
   end
+
 
 end

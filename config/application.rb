@@ -22,7 +22,6 @@ module StackLike
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.eager_load_paths << config.root.join('lib').to_s
-
-    config.active_record.observers = :like_observer
+  
   end
 end
