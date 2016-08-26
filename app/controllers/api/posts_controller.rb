@@ -17,7 +17,7 @@ class Api::PostsController < ApplicationController
   end
 
   def collection
-    @posts = Post.page(params[:page]).per(5)
+    @posts = Post.visible.page(params[:page]).per(5)
   end
 
   def resource_params

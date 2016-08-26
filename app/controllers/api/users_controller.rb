@@ -12,8 +12,14 @@ skip_before_action :authenticate, only: [:create]
   end
 
   def resource
-    @user ||=current_user
+    return @user if @user
+    if params[:id]
+      @user = User.find(params[:id])
+    else
+      @user = current_user
+    end
   end
+
 
   def collection
     @users = User.page(params[:page]).per(5)

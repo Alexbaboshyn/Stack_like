@@ -9,11 +9,9 @@ class Api::LikesController < ApplicationController
 
   def parent
     return @parent if @parent
-    if params[:post_id]
-      @parent = Post.find(params[:post_id])
-    else
-      @parent = Comment.find(params[:comment_id]) if params[:comment_id]
-    end
+    @parent = Post.find(params[:post_id]) if params[:post_id]
+    @parent = Comment.find(params[:comment_id]) if params[:comment_id]
+    @parent
   end
 
   def build_resource

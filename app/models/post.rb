@@ -14,4 +14,8 @@ class Post < ApplicationRecord
 
   has_many :comments, dependent: :destroy
 
+
+
+  scope :visible, -> { where(is_deleted: false) }
+
 end

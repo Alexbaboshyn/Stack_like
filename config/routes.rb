@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
   namespace :admin do
+    resources :categories, only: [:create, :destroy, :update, :show, :index]
+
+    resources :users, only: [:index, :show, :update]
+
+    resources :posts, only: [:index, :show, :destroy]
 
   end
 
@@ -8,17 +13,17 @@ Rails.application.routes.draw do
 
   namespace :api do
 
-    resources :users, only: [:create, :destroy, :index, :update]
+    resources :users, only: [:create, :destroy, :index, :show]
 
     resource :session, only: [:create, :destroy]
 
-    resources :categories, only: [:index, :show, :create, :update, :destroy] do
-      resources :posts, only: [:index, :create]
+    resources :categories, only: [:index, :show] do
+      resources :posts, only: [:index, :create, :show]
     end
 
-    resource :me, controller: 'users', only: [:show]
+    resource :me, controller: 'users', only: [:show, :update]
 
-    resources :posts, only: [:index, :show] do
+    resources :posts, only: [:index, :show, :update] do
       resource :likes, only: [:create, :destroy]
       resources :comments
     end

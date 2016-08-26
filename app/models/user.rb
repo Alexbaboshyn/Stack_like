@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_secure_password
 
-  validates :is_admin, presence: true
+  # validates :is_admin, presence: true, default: false
 
   validates :first_name, presence: true
 
@@ -18,5 +18,9 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
 
   has_many :likes, dependent: :destroy
+
+
+  scope :admin, -> { where(is_admin: true) }
+  scope :not_admin, -> { where(is_admin: false) }
 
 end
