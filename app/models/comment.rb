@@ -8,4 +8,9 @@ class Comment < ApplicationRecord
 
   belongs_to :post
 
+  COMMENT_CONSTANT = 3
+
+  scope :visible, -> { where(is_deleted: false).joins(:user)
+                                               .where(users:{ is_banned: false }) }
+
 end

@@ -10,10 +10,11 @@ skip_before_action :authenticate, only: [:create]
   def build_resource
     @user = User.new resource_params
   end
+  
 
   def resource
     return @user if @user
-    if params[:id]
+    if params[:id] && params[:action] != 'update'
       @user = User.find(params[:id])
     else
       @user = current_user
@@ -26,6 +27,6 @@ skip_before_action :authenticate, only: [:create]
   end
 
   def resource_params
-    params.require(:user).permit(:is_admin, :first_name, :last_name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
   end
 end

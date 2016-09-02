@@ -20,7 +20,7 @@ class Api::CommentsController < ApplicationController
   end
 
   def collection
-    @comments = Comment.page(params[:page]).per(5)
+    @comments = Comment.visible.page(params[:page]).per(5)
   end
 
   def resource_params

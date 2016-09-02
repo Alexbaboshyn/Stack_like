@@ -7,13 +7,17 @@ Rails.application.routes.draw do
 
     resources :posts, only: [:index, :show, :destroy]
 
+    resource :me, controller: 'users', only: [:show, :update]
+
   end
 
 
 
   namespace :api do
 
-    resources :users, only: [:create, :destroy, :index, :show]
+    resources :users, only: [:create, :index, :show]
+
+    resource :me, controller: 'users', only: [:show, :update]
 
     resource :session, only: [:create, :destroy]
 
@@ -21,14 +25,12 @@ Rails.application.routes.draw do
       resources :posts, only: [:index, :create, :show]
     end
 
-    resource :me, controller: 'users', only: [:show, :update]
-
     resources :posts, only: [:index, :show, :update] do
       resource :likes, only: [:create, :destroy]
       resources :comments
     end
 
-    resources :comments do
+    resources :comments, only: [:index, :show, :update, :destroy] do
       resource :likes, only: [:create, :destroy]
     end
 

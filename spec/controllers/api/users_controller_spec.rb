@@ -5,11 +5,13 @@ RSpec.describe Api::UsersController, type: :controller do
 
   it { should route(:post, 'api/users').to(action: :create) }
 
-  it { should route(:patch, 'api/users/1').to(action: :update, id: 1) }
+  it { should route(:get, 'api/users/1').to(action: :show, id: 1) }
 
-  it { should route(:put, 'api/users/1').to(action: :update, id: 1) }
+  it { should route(:get, 'api/me').to(action: :show) }
 
-  it { should route(:delete, 'api/users/1').to(action: :destroy, id: 1) }
+  it { should route(:patch, 'api/me').to(action: :update) }
+
+  it { should route(:put, 'api/me').to(action: :update) }
 
 
   describe '#create.json' do
@@ -49,6 +51,29 @@ RSpec.describe Api::UsersController, type: :controller do
     end
 
     it { expect { subject.send :collection }.to_not raise_error }
+  end
+
+  describe '#resource' do
+
+    context 'find_params' do
+      before { allow(subject).to receive(:params).and_return({id: 1}) }
+
+      before { expect(User).to receive(:find).with(1) }
+
+      it { expect { subject.send :resource }.to_not raise_error }
+    end
+
+    context 'current_user' do
+
+      let(:user) { stub_model User }
+
+      # before { sign_in user }
+
+      before { expect(subject).to receive(:params).and_return( {} ) }
+
+      it { expect { subject.send :resource }.to_not raise_error }
+
+    end
   end
 
 end

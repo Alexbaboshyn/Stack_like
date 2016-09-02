@@ -1,58 +1,75 @@
 class LikeObserver < ActiveRecord::Observer
 
+  attr_reader :like, :coef
+
+
   def after_create(like)
-    if like.kind == "positive"
-      like.likeable.increment(:rating, 1)
-      if like.likeable.is_a?(Comment)
-        like.likeable.user.increment(:rating, 1)
-        like.likeable.user.save
-        like.likeable.post.increment(:rating, 1)
-        like.likeable.post.save
-      else
-        like.likeable.author.increment(:rating, 1)
-        like.likeable.author.save
-      end
+    @coef = 1
+    @like = like
+    add_rating
+  end
+
+  def after_destroy(like)
+    @coef = -1
+    @like = like
+    add_rating
+  end
+
+  def add_rating
+    add_rating_to_post_and_author
+    add_rating_to_comment_and_user if like.likeable.is_a?(Comment)
+  end
+
+  def add_rating_to_post_and_author
+    post.increment!(:rating, rating_value)
+    post.author.increment!(:rating, rating_value)
+  end
+
+  def add_rating_to_comment_and_user
+    like.likeable.increment!(:rating, rating_value)
+    like.likeable.user.increment!(:rating, rating_value)
+  end
+
+  def post
+    @post = \
+    if like.likeable.is_a?(Comment)
+      like.likeable.post
     else
-      like.likeable.decrement(:rating, 1)
-      if like.likeable.is_a?(Comment)
-        like.likeable.user.decrement(:rating, 1)
-        like.likeable.user.save
-        like.likeable.post.increment(:rating, 1)
-        like.likeable.post.save
-      else
-        like.likeable.author.decrement(:rating, 1)
-        like.likeable.author.save
-      end
+      like.likeable
     end
-    like.likeable.save
   end
 
 
-  def after_destroy(like)
-    if like.kind == "positive"
-      like.likeable.decrement(:rating, 1)
-      if like.likeable.is_a?(Comment)
-        like.likeable.user.decrement(:rating, 1)
-        like.likeable.user.save
-        like.likeable.post.decrement(:rating, 1)
-        like.likeable.post.save
-      else
-        like.likeable.author.decrement(:rating, 1)
-        like.likeable.author.save
-      end
+  def rating_value
+    @rating_value =\
+    if like.positive?
+      coef * Like::POSITIVE_VALUE
     else
-      like.likeable.increment(:rating, 1)
-      if like.likeable.is_a?(Comment)
-        like.likeable.user.increment(:rating, 1)
-        like.likeable.user.save
-        like.likeable.post.decrement(:rating, 1)
-        like.likeable.post.save
-      else
-        like.likeable.author.increment(:rating, 1)
-        like.likeable.author.save
-      end
+      coef * Like::NEGATIVE_VALUE
     end
-    like.likeable.save
   end
 
 end
+#
+#
+# # def after_create(like)
+# #   @like = like
+# #   like.likeable.increment!(:rating, rating_value)
+#   if like.likeable.is_a?(Comment)
+#     like.likeable.user.increment!(:rating, rating_value)
+#     like.likeable.post.increment!(:rating, rating_value)
+#   else
+#     like.likeable.author.increment!(:rating, rating_value)
+#   end
+# end
+
+# def after_destroy(like)
+#   @like = like
+#   like.likeable.decrement!(:rating, rating_value)
+#   if like.likeable.is_a?(Comment)
+#     like.likeable.user.decrement!(:rating, rating_value)
+#     like.likeable.post.decrement!(:rating, rating_value)
+#   else
+#     like.likeable.author.decrement!(:rating, rating_value)
+#   end
+# end
